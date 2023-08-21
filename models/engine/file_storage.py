@@ -1,14 +1,6 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
-from models.base_model import BaseModel
-from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-import shlex
 
 
 class FileStorage:
@@ -33,15 +25,15 @@ class FileStorage:
                 temp[key] = val.to_dict()
             json.dump(temp, f)
 
-    # def reload(self):
-    #     """Loads storage dictionary from file"""
-    #     from models.base_model import BaseModel
-    #     from models.user import User
-    #     from models.place import Place
-    #     from models.state import State
-    #     from models.city import City
-    #     from models.amenity import Amenity
-    #     from models.review import Review
+    def reload(self):
+        """Loads storage dictionary from file"""
+        from models.base_model import BaseModel
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
 
         classes = {
                     'BaseModel': BaseModel, 'User': User, 'Place': Place,
@@ -63,7 +55,4 @@ class FileStorage:
         if obj:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             del self.__objects[key]
-    def close(self):
-        """ calls reload()
-        """
-        self.reload()
+
