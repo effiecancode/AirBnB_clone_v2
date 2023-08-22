@@ -20,27 +20,27 @@ class DBStorage():
     __session = None
 
     def __init__(self):
-        """Initialize db storage attributes & link the db"""
-        user = getenv("HBNB_MYSQL_USER")
-        password = getenv("HBNB_MYSQL_PWD")
-        host = getenv("HBNB_MYSQL_HOST")
-        db = getenv("HBNB_MYSQL_DB")
-        env = getenv("HBNB_ENV")
-
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'
-                                      .format(user, password, host, db),
+        """Initialize a new DBStorage instance."""
+        self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".
+                                      format(getenv("HBNB_MYSQL_USER"),
+                                             getenv("HBNB_MYSQL_PWD"),
+                                             getenv("HBNB_MYSQL_HOST"),
+                                             getenv("HBNB_MYSQL_DB")),
                                       pool_pre_ping=True)
-        if env == 'test':
+        if getenv("HBNB_ENV") == 'test':
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """query current db session & return a dict like in filestorage"""
+        """query current db session of all objs like in filestorage
+        If cls is None, queries all types of objects.
+        return: dict of queried classes key:val = <class name>.<obj id> = obj
+        """
 
-        my_classes = (Amenity, City, Place, Review, State, User)
+        all_classes = (Amenity, City, Place, Review, State, User)
         objects = dict()
 
         if cls is None:
-            for item in my_classes:
+            for item in all_classes:
                 query = self.__session.query(item)
                 for obj in query.all():
                     obj_key = '{}.{}'.format(obj.__class__.name__, obj.id)
@@ -57,23 +57,23 @@ class DBStorage():
         self.__session.add(obj)
 
     def save(self):
-        """commit all the changes"""
+        """commit all the changes to current database session"""
         self.__session.commit()
 
     def delete(self, obj=None):
         """delete current database session"""
-        if obj:
+        if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
-        """creates all the tables in database"""
+        """creates all the tables in database and initialize a new session"""
         Base.metadata.create_all(self.__engine)
 
-        my_session_maker = sessionmaker(
+        my_session = sessionmaker(
             bind=self.__engine, expire_on_commit=False)
-        my_session = scoped_session(my_session_maker)
-        self.__session = my_session()
+        my_actual_session = scoped_session(my_session)
+        self.__session = my_actual_session()
 
     def close(self):
-        """close the query"""
+        """close the working SQLalchemy session"""
         self.__session.close()
