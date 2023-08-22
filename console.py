@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] == '{' and pline[-1] =='}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -112,59 +112,38 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """ Overrides the emptyline method of CMD """
         pass
-    def check_value_type(self, value):
-        """checks the type of value"""
-        arg = ""
-        if value[0] == '"' and value[-1] == '"':
 
-            for i in range(1, len(value) - 1):
-                if value[i] == "_":
-                    arg += " "
+    def do_create(self, args):
+        """ Create an object of any class"""
+        tokens = args.split()
+        class_name = tokens[0]
+        if not args:
+            print("** class name missing **")
+            return
+        elif class_name not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return
+        new_instance = HBNBCommand.classes[class_name]()
+        print(class_name)
+        for param in tokens[1:]:
+            key_value = param.split('=')
+            if len(key_value) == 2:
+                key = key_value[0]
+                value = key_value[1]
+                if value.startswith('"') and value.endswith('"'):
+                    value = value.replace('\\"', '"')
+                    value = value.replace('_', ' ')
+                elif '.' in value:
+                    value = float(value)
+                else:
+                    value = int(value)
+                if value is None:
                     continue
-                arg += value[i]
-            return arg
-        elif value.find(".") != -1:
-            return float(value)
-        else:
-            return int(value)
-
-    def do_create(self, args):
-        """ Create an object of any class"""
-        if not args:
-            print("** class name missing **")
-            return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
-        storage.save()
-        print(new_instance.id)
-        storage.save()
-
-    def do_create(self, args):
-        """ Create an object of any class"""
-        arg = args.split()
-        if not args:
-            print("** class name missing **")
-            return
-        elif arg[0] not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-
-        new_instance = eval(arg[0])()
-        print(arg[0])
-        arg.pop(0)
-        for item in arg:
-            item = item.split('=')
-            if len(item) != 2:
-                continue
-            key = item[0]
-            value = item[1]
-            value = self.check_value_type(value)
-            if value is None:
-                continue
-            else:
-                setattr(new_instance, key, value)
+                else:
+                    setattr(new_instance, key, value)
+                #  param_dict = {}
+                #  param_dict[key] = value
+        #  new_instance = HBNBCommand.classes[args]()
         storage.new(new_instance)
         storage.save()
         print(new_instance.id)
@@ -230,7 +209,9 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            all_items = storage.all()
+            del all_items[key]
+
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -362,6 +343,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
