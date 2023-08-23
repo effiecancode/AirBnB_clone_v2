@@ -37,7 +37,7 @@ class DBStorage():
         """
 
         all_classes = (Amenity, City, Place, Review, State, User)
-        objects = dict()
+        objects = {}
 
         if cls is None:
             for item in all_classes:
