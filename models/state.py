@@ -21,7 +21,8 @@ class State(BaseModel, Base):
     @property
     def cities(self):
         """
-        returns a list of City instances with state_id == current State.id
+        returns the list of City instances with state_id equals
+        to the current State.id
         """
         from models import storage
         related_cities = []
