@@ -5,8 +5,18 @@ from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Table, Integer, Float, String, ForeignKey
 from sqlalchemy.orm import relationship
+from models import Amenity
 import models
 from os import getenv
+
+
+place_amenity = Table('place_amenity', Base.metadata,
+                      Column('place_id', String(60),
+                             ForeignKey('places.id'),
+                             primary_key=True, nullable=False),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
+                             primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -28,6 +38,10 @@ class Place(BaseModel, Base):
     if getenv("HBNB_TYPE_STORAGE") == "db":
         reviews = relationship('Review', cascade='all, delete, delete-orphan',
                                backref='place')
+        amenities = relationship('Amenity', secondary=place_amenity,
+                                 viewonly=False,
+                                 back_populates='place_amenities')
+
     else:
         @property
         def reviews(self):
@@ -38,7 +52,7 @@ class Place(BaseModel, Base):
 
         @property
         def amenities(self):
-            """Get linked Amenities"""
+            """Get linked to place Amenities"""
             amenityList = []
             for amenity in list(models.storage.all(Amenity).values()):
                 if amenity.id in self.amenity_ids:
@@ -46,6 +60,7 @@ class Place(BaseModel, Base):
             return amenityList
 
         @amenities.setter
-        def amenities(self, value):
-            if type(value) is Amenity:
-                self.amenity_ids.append(value.id)
+        def amenities(self, val):
+            """Handle append method for adding an Amenity"""
+            if type(val) == Amenity:
+                self.amenity_ids.append(val.id)
