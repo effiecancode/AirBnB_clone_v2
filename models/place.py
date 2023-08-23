@@ -49,7 +49,7 @@ class Place(BaseModel, Base):
                     if review.place_id == self.id]
         @property
         def amenities(self):
-            """Get/set linked Amenities."""
+            """Get linked Amenities"""
             amenityList = []
             for amenity in list(models.storage.all(Amenity).values()):
                 if amenity.id in self.amenity_ids:
