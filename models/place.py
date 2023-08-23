@@ -53,6 +53,7 @@ class Place(BaseModel, Base):
         def amenities(self):
             """Get linked to place Amenities"""
             amenityList = []
+            from models.amenity import Amenity
             for amenity in list(models.storage.all(Amenity).values()):
                 if amenity.id in self.amenity_ids:
                     amenityList.append(amenity)
