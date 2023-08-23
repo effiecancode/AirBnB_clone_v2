@@ -21,4 +21,4 @@ class Place(BaseModel, Base):
     latitude = Column(float, nalluble=True)
     longitude = Column(float, nalluble=True)
 
-    # amenity_ids = []
+    amenity_ids = []
