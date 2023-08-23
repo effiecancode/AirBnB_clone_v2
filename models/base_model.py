@@ -32,6 +32,7 @@ class BaseModel:
         """Returns a string representation of the instance"""
         cls = self.__dict__.copy()
         cls.pop("_sa_instance_state", None)
+        print(cls)
         return '[{}] ({}) {}'.format(type(self).__name__, self.id, cls)
 
     def save(self):
