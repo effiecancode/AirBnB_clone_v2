@@ -35,3 +35,17 @@ class Place(BaseModel, Base):
             review_instances = storage.all("Review").values()
             return [review for review in review_instances
                     if review.place_id == self.id]
+
+        @property
+        def amenities(self):
+            """Get linked Amenities"""
+            amenityList = []
+            for amenity in list(models.storage.all(Amenity).values()):
+                if amenity.id in self.amenity_ids:
+                    amenityList.append(amenity)
+            return amenityList
+
+        @amenities.setter
+        def amenities(self, value):
+            if type(value) is Amenity:
+                self.amenity_ids.append(value.id)
