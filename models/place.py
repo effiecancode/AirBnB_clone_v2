@@ -5,7 +5,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Table, Integer, Float, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models import Amenity
 import models
 from os import getenv
 
@@ -62,5 +61,6 @@ class Place(BaseModel, Base):
         @amenities.setter
         def amenities(self, val):
             """Handle append method for adding an Amenity"""
+            from models.amenity import Amenity
             if type(val) == Amenity:
                 self.amenity_ids.append(val.id)
