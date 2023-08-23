@@ -142,36 +142,38 @@ class HBNBCommand(cmd.Cmd):
     #     print(new_instance.id)
 
     def do_create(self, args):
-        """ Create an object of any class"""
-        arg = args.split()
-        class_name = arg[0]
-        if not args:
-            print("** class name missing **")
-            return
-        elif class_name not in HBNBCommand.classes:
+        """ Create an object of any class with fed key/value parameters"""
+        try:
+            if not args:
+                raise SyntaxError()
+            argsList = args.split(" ")
+            className = argsList[0]
+
+            kwargs = {}
+            for i in range(1, len(argsList)):
+                key, value = tuple(argsList[i].split("="))
+                if value[0] == '"':
+                    value = value.strip('"').replace("_", " ")
+                else:
+                    try:
+                        value = eval(value)
+                    except (SyntaxError, NameError):
+                        continue
+                kwargs[key] = value
+
+            if kwargs == {}:
+                newObject = eval(className)()
+            else:
+                newObject = eval(className)(**kwargs)
+                storage.new(newObject)
+            print(newObject.id)
+            newObject.save()
+
+
+        except NameError:
             print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[class_name]()
-        # print(class_name)
-        for parameter in arg[1:]:
-            key_value = parameter.split('=')
-            if len(key_value) == 2:
-                key = key_value[0]
-                value = key_value[1]
-                if value.startswith('"') and value.endswith('"'):
-                    # value = value.replace('\\"', '"')
-                    value = value.replace('_', ' ')
-                elif '.' in value:
-                    value = float(value)
-                else:
-                    value = int(value)
-                if value is None:
-                    continue
-                else:
-                    setattr(new_instance, key, value)
-        storage.new(new_instance)
-        storage.save()
-        print(new_instance.id)
+        except SyntaxError:
+            print("** class name missing **")
 
     def help_create(self):
         """ Help information for the create method """
