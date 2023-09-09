@@ -8,7 +8,7 @@ sudo apt-get -y install nginx
 # Create necessary directories
 sudo mkdir -p /data/web_static/releases/test /data/web_static/shared
 
-# Create a script for testing
+# Create a string for testing
 echo "You got this babygirl" | sudo tee /data/web_static/releases/test/index.html
 
 # Create if not existing a symbolic link
