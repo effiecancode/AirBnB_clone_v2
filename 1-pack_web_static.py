@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 '''Fabric script to generate .tgz archive'''
 
-from fabric.api import local
+from fabric.api import local, runs_once
 from datetime import datetime
-
-from fabric.decorators import runs_once
 
 
 @runs_once

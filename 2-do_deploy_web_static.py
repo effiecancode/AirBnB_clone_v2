@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 '''
 fabric script to distribute an archive to web servers
-----NEEDS TO REVISIT SCRIPT
 '''
 
 import os
@@ -10,35 +9,6 @@ from fabric.api import env, local, put, run, runs_once
 
 
 env.hosts = ['34.232.72.158', '34.224.83.81']
-
-
-def do_deploy(archive_path):
-    """Distributes an archive to a web server.
-    Args:
-        archive_path (str): The path of the archive to distribute.
-    Returns:
-        If the file doesn't exist at archive_path or an error occurs - False.
-        Otherwise - True.
-    """
-    if not os.path.isdir("versions"):
-        os.mkdir("versions")
-    cur_time = datetime.now()
-    output = "versions/web_static_{}{}{}{}{}{}.tgz".format(
-        cur_time.year,
-        cur_time.month,
-        cur_time.day,
-        cur_time.hour,
-        cur_time.minute,
-        cur_time.second
-    )
-    try:
-        print("Packing web_static to {}".format(output))
-        local("tar -cvzf {} web_static".format(output))
-        archize_size = os.stat(output).st_size
-        print("web_static packed: {} -> {} Bytes".format(output, archize_size))
-    except Exception:
-        output = None
-    return output
 
 
 def do_deploy(archive_path):
