@@ -31,8 +31,9 @@ def display_C(text):
     return f"C {text}"
 
 
-@app.route("/python/<text>", strict_slashes=False)
-def display_Python(text="is cool"):
+@app.route('/python/', defaults={'text': 'is_cool'}, strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
+def display_Python(text):
     """
     Displays Python
     """
