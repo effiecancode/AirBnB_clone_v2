@@ -42,7 +42,7 @@ from fabric.api import env, put, run
 
 
 env.user = 'ubuntu'
-env.hosts = ['54.158.187.197', '100.25.188.196']
+env.hosts = ['34.232.72.158', '34.224.83.81']
 env.warn_only = True
 
 
