@@ -38,7 +38,7 @@ def display_Python(text):
     Displays Python
     """
     text = text.replace('_', ' ')
-    return f"Python{text}"
+    return f"Python {text}"
 
 
 if __name__ == '__main__':
