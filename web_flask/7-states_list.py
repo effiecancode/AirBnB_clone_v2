@@ -15,7 +15,7 @@ def states_list():
     sorted by name
     """
     states = storage.all("state")
-    return render_template("7-states_list.html", States=states)
+    return render_template("7-states_list.html", states=states)
 
 @app.teardown_appcontext
 def teardown(exc):
