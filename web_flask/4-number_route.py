@@ -41,10 +41,10 @@ def display_Python(text):
     return f"Python {text}"
 
 
-@app.route("/number/<n>", strict_slashes=False)
+@app.route("/number/<int:n>", strict_slashes=False)
 def display_n(n):
     """
-    Displays n
+    Displays n and checks if it's a number
     """
     if isinstance(n, int):
         return f"{n} is a number"
