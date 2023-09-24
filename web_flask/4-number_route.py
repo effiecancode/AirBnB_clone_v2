@@ -46,10 +46,7 @@ def display_n(n):
     """
     Displays n and checks if it's a number
     """
-    if isinstance(n, int):
-        return f"{n} is a number"
-    else:
-        return f"{n} is not a number"
+    return f"{n} is a number"
 
 
 if __name__ == '__main__':
