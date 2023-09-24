@@ -4,8 +4,8 @@ Routes:
     /cities_by_states: HTML page with a list of all states and related cities
 """
 from models import storage
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template
+from models.state import State
 
 app = Flask(__name__)
 
@@ -15,13 +15,13 @@ def cities_by_states():
     """Displays an HTML page with a list of all states and related cities.
     sorted by name.
     """
-    states = storage.all("State")
+    states = storage.all(State)
     return render_template("8-cities_by_states.html", states=states)
 
 
 @app.teardown_appcontext
 def teardown_session(exc):
-    """Remove the current SQLAlchemy session."""
+    """End the current SQLAlchemy session."""
     storage.close()
 
 
